@@ -88,16 +88,16 @@ class WeightedDigraph(Digraph):
         dest = edge.getDestination()
         if not(src in self.nodes and dest in self.nodes):
             raise ValueError('Node not in graph')
-        self.edges[src].append(edge)
+        self.edges[src].append([dest, (edge.getTotalDistance(), edge.getOutdoorDistance())])
     def childrenOf(self, node):
         children = []
         for e in self.edges[node] :
-            children.append(e.getDestination())
+            children.append(e[0])
         return children
     def __str__(self):
         res = ''
         for k in self.edges:
-            for e in self.edges[str(k)]:
-                res = '{0}{1}->{2} ({3:.1f}, {4:.1f})\n'.format(res, k, e.getDestination(), e.getTotalDistance(), e.getOutdoorDistance() )
+            for e in self.edges[k]:
+                res = '{0}{1}->{2} ({3:.1f}, {4:.1f})\n'.format(res, k, e[0], e[1][0], e[1][1] )
         return res[:-1]
     

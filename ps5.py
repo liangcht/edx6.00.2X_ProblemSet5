@@ -37,8 +37,26 @@ def load_map(mapFilename):
     """
     # TODO
     print "Loading map from file..."
-        
-
+    g = WeightedDigraph()
+    
+    handle = open(mapFilename, 'r')
+    
+    for line in handle :
+        strings = line.split()
+        src = Node(strings[0])
+        dest = Node(strings[1])
+        edge = WeightedEdge(src, dest, float(strings[2]), float(strings[3]))
+        if not g.hasNode(src) :
+            g.addNode(src)
+        if not g.hasNode(dest) :
+            g.addNode(dest)
+        try :
+            g.addEdge(edge)
+        except ValueError, errMessage :
+            print errMessage
+            
+            
+    return g
 #
 # Problem 3: Finding the Shortest Path using Brute Force Search
 #
