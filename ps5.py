@@ -64,6 +64,28 @@ def load_map(mapFilename):
 # and what the constraints are
 #
 
+def DFS(graph, start, end, path = [], totalDist=0, outdoorDist=0, found_paths = []):
+    #assumes graph is a Digraph
+    #assumes start and end are nodes in graph
+    path = path + [start]
+    #print 'Current dfs path:', printPath(path)
+    if start == end:
+        return path, totalDist, outdoorDist
+    for edge in graph.edgesOf(start):
+        
+        if edge[0] not in path: #avoid cycles  
+            totalDist += edge[1][0]
+            outdoorDist += edge[1][1]
+            try :
+                newPath, newTotalDist, newOutdoorDist = DFS(graph,edge[0],end,path,totalDist,outdoorDist,found_paths)
+            except TypeError :
+                #The DFS could not find the path and just return a "None" object that can't used to initialized three variables
+                newPath = None
+                totalDist -= edge[1][0]
+                outdoorDist -= edge[1][1]
+            if newPath != None:
+                found_paths.append((newPath,newTotalDist,newOutdoorDist))
+
 def bruteForceSearch(digraph, start, end, maxTotalDist, maxDistOutdoors):    
     """
     Finds the shortest path from start to end using brute-force approach.
@@ -89,7 +111,29 @@ def bruteForceSearch(digraph, start, end, maxTotalDist, maxDistOutdoors):
         maxDistOutdoors constraints, then raises a ValueError.
     """
     #TODO
-    pass
+    
+    
+# Test for DFS
+nodes = []
+for name in range(6):
+    nodes.append(Node(str(name)))
+g = WeightedDigraph()
+for n in nodes:
+    g.addNode(n)
+g.addEdge(WeightedEdge(nodes[0],nodes[1],2,1))
+g.addEdge(WeightedEdge(nodes[1],nodes[2],2,1))
+g.addEdge(WeightedEdge(nodes[2],nodes[3],2,1))
+g.addEdge(WeightedEdge(nodes[2],nodes[4],2,1))
+g.addEdge(WeightedEdge(nodes[3],nodes[4],2,1))
+g.addEdge(WeightedEdge(nodes[3],nodes[5],2,1))
+g.addEdge(WeightedEdge(nodes[0],nodes[2],2,1))
+g.addEdge(WeightedEdge(nodes[1],nodes[0],2,1))
+g.addEdge(WeightedEdge(nodes[3],nodes[1],2,1))
+g.addEdge(WeightedEdge(nodes[4],nodes[0],2,1))
+f_p = []
+DFS(g, nodes[0], nodes[5], found_paths=f_p)
+print f_p
+
 
 #
 # Problem 4: Finding the Shorest Path using Optimized Search Method
