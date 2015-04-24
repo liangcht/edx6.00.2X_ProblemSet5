@@ -53,9 +53,7 @@ def load_map(mapFilename):
         try :
             g.addEdge(edge)
         except ValueError, errMessage :
-            print errMessage
-            
-            
+            print errMessage        
     return g
 #
 # Problem 3: Finding the Shortest Path using Brute Force Search
@@ -63,6 +61,20 @@ def load_map(mapFilename):
 # State the optimization problem as a function to minimize
 # and what the constraints are
 #
+
+def DFS(graph, start, end, path = [], found_path = []):
+    #assumes graph is a Digraph
+    #assumes start and end are nodes in graph
+    path = path + [start]
+    #print 'Current dfs path:', path
+    if start == end:
+        return path
+    for node in graph.childrenOf(start):
+        if node not in path: #avoid cycles
+            newPath = DFS(graph,node,end,path,found_path)
+            if newPath != None:
+                found_path.append(newPath)
+    return found_path
 
 def bruteForceSearch(digraph, start, end, maxTotalDist, maxDistOutdoors):    
     """
@@ -89,7 +101,16 @@ def bruteForceSearch(digraph, start, end, maxTotalDist, maxDistOutdoors):
         maxDistOutdoors constraints, then raises a ValueError.
     """
     #TODO
-    pass
+    # found_path = DFS(digraph, Node(start), Node(end))
+    # for p in found_path :
+    #     out_dist = 0
+    #     for spot in p :
+
+
+# Test for problem 3
+mitMap = load_map("mit_map.txt")
+print DFS(mitMap, Node('34'), Node('36'))
+
 
 #
 # Problem 4: Finding the Shorest Path using Optimized Search Method
